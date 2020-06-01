@@ -10,6 +10,9 @@ class Domain{
 
   public:
     void add_value(Value* value);
+    void set_values(const std::vector<Value*>& values);
+    void remove_value(const Value* value);
     std::vector<Value*>& values() { return m_values; }
     void display();
+
 };

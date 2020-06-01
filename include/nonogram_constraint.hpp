@@ -16,6 +16,8 @@ class NonoGramConstraint: public Constraint{
     void add_variable(Variable* variable);
     virtual void display();
     virtual bool apply();
+    virtual bool is_valid();
+    virtual bool update_domain();
 };
 
 class NonoGramColumnConstraint: public NonoGramConstraint{

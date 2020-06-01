@@ -10,6 +10,7 @@ class NonoGramCSP: public CSP{
     int m_length;
   public:
     NonoGramCSP(NonoGram& nonogram);
+    NonoGramCSP(NonoGramCSP& other);
     ~NonoGramCSP();
     void display();
     void display_values();

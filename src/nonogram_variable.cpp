@@ -11,6 +11,14 @@ NonoGramVariable(int x, int y)
   m_domain = nullptr;
 }
 
+NonoGramVariable::
+NonoGramVariable(const NonoGramVariable& other){
+  m_value = other.value();
+  *m_domain = *other.domain();
+  m_x = other.x();
+  m_y = other.y();
+}
+
 
 void
 NonoGramVariable::

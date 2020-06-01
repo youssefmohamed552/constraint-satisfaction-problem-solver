@@ -8,8 +8,7 @@ class NonoGramValue: public Value{
     NonoGramToken m_token;
   public:
     NonoGramValue(NonoGramToken token);
+    virtual ~NonoGramValue();
     int token() const { return m_token; }
-    ~NonoGramValue();
     void display();
-
 };

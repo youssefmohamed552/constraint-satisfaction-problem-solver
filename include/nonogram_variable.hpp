@@ -9,6 +9,9 @@ class NonoGramVariable : public Variable{
     int m_y;
   public:
     NonoGramVariable(int x, int y);
+    NonoGramVariable(const NonoGramVariable& other);
     ~NonoGramVariable();
+    int x() const { return m_x; };
+    int y() const { return m_y; };
     void display();
 };

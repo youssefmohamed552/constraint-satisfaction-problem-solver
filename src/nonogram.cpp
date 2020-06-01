@@ -59,15 +59,15 @@ display(){
   // print the horizontal
   for(int i = 0; i < depth; i++){
     for(int j = 0; j < shift+(shift-1); j++){ 
-      std::cout << " ";
+      std::cout << std::setw(digit_count) <<  " ";
     }
     std::cout << "|";
     for(int j = 0; j < m_horizontal_constraints.size(); j++){
       if(m_horizontal_constraints[j].size() > (depth-i-1)){
-        std::cout << m_horizontal_constraints[j][depth-i-1] << "|";
+        std::cout << std::setw(digit_count) << m_horizontal_constraints[j][depth-i-1] << "|";
       }
       else{
-        std::cout << " " << "|";
+        std::cout << std::setw(digit_count) << " " << "|";
       }
     }
     std::cout << "\n";
@@ -76,10 +76,10 @@ display(){
   for(int i = 0; i < m_vertical_constraints.size(); i++){
     for(int j = 0; j < shift; j++){
       if(m_vertical_constraints[i].size() > (shift-j-1)){
-        std::cout << m_vertical_constraints[i][shift-j-1] << "|";
+        std::cout << std::setw(digit_count) << m_vertical_constraints[i][shift-j-1] << "|";
       }
       else{
-        std::cout << " " << "|";
+        std::cout << std::setw(digit_count) << " " << "|";
       }
     }
     // print the values in the board

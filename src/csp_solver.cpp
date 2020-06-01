@@ -56,11 +56,24 @@ solve_helper(std::vector<Variable*>::iterator v_it){
   for(auto value : v->domain()->values()){
     // std::cout << "val\n";
     v->set_value(value);
-    // v->display();
+    // static_cast<NonoGramCSP*>(m_csp)->display_values();
+    // char ch;
+    // std::cin >> ch;
+    if(!is_valid_for_search()) {
+      // std::cout << "have to leave\n";
+      v->set_value(nullptr);
+
+      continue;
+    }
+    // std::cout << "keep going\n";
+    
+    // static_cast<NonoGramCSP*>(m_csp)->display_values();
     valid_solution = solve_helper(next_it);
     // std::cout << "here\n";
     if(valid_solution) return true;
   }
+  v->set_value(nullptr);
+
   return false;
 }
 
@@ -68,6 +81,7 @@ solve_helper(std::vector<Variable*>::iterator v_it){
 bool
 BackTrackingCSPSolver::
 check_consistency(){
+
   // std::cout << "check_consistency\n";
   // char x;
   // std::cin >> x;
@@ -82,4 +96,44 @@ check_consistency(){
 
 
 
+bool
+BackTrackingCSPSolver::
+is_valid_for_search(){
+  // static_cast<NonoGramCSP*>(m_csp)->display_values();
+  // char c;
+  // std::cin >> c;
+  for(auto c: m_csp->constraints()){
+    if(!c->is_valid()) return false;
+  }
+  // std::cout << "valid for search\n";
+  return true;
+}
 
+AC1CSPSolver::
+AC1CSPSolver(CSP* csp)
+  : BackTrackingCSPSolver(csp)
+{
+}
+
+AC1CSPSolver::
+~AC1CSPSolver(){
+}
+
+
+bool
+AC1CSPSolver::
+solve(){
+  if(!update_domain()) return false;
+  return BackTrackingCSPSolver::solve(); 
+}
+
+
+bool
+AC1CSPSolver::
+update_domain(){
+  std::cout << "updating domin\n";
+  for(auto it_c = m_csp->constraints().begin(); it_c != m_csp->constraints().end(); ++it_c){
+    if(!(*it_c)->update_domain()) return false;
+  }
+  return true;
+}

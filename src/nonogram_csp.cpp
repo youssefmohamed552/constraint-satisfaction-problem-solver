@@ -48,6 +48,19 @@ NonoGramCSP(NonoGram& nonogram){
   }
 }
 
+NonoGramCSP::
+NonoGramCSP(NonoGramCSP& other){
+  std::cout << "nonogram csp copy\n";
+  m_variables = std::vector<Variable*>(other.variables().size());
+  for(int i = 0; i < m_variables.size(); i++){
+    *m_variables[i] = *other.variables()[i];
+  }
+  m_constraints = std::vector<Constraint*>(other.constraints().size());
+  for(int i = 0; i < m_constraints.size(); i++){
+    *m_constraints[i] = *other.constraints()[i];
+  }
+}
+
 
 NonoGramCSP::
 ~NonoGramCSP(){

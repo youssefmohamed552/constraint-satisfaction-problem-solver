@@ -1,5 +1,8 @@
 #include <iostream>
+#include <numeric>
 
+#include "nonogram_value.hpp"
+#include "nonogram_variable.hpp"
 #include "nonogram_constraint.hpp"
 
 
@@ -92,6 +95,99 @@ apply(){
   return false;
 }
 
+bool
+NonoGramConstraint::
+is_valid(){
+  // std::cout << "checking if it's valid \n";
+  auto constraint = m_constraint.begin();
+  int count = 0;
+  int i = 0;
+  while(i < m_variables.size()){
+    count = 0;
+    // count white
+    while(i < m_variables.size() &&  (m_variables[i]->value() == nullptr || m_variables[i]->value()->token() == WHITE)) { i++; }
+
+    // count black
+    while(i < m_variables.size() &&  (m_variables[i]->value() != nullptr && m_variables[i]->value()->token() != WHITE)) { count++;  i++; }
+
+    // std::cout << "here\n";
+    // std::cout << "constratin : " << *constraint << " count : " << count << "\n";
+
+    if(i >= m_variables.size()) break;
+    if(count > *constraint) return false;
+    if(count < *constraint) break;
+    constraint++;
+    if(constraint == m_constraint.end()) break;
+
+  }
+  while(i < m_variables.size()){
+    // std::cout << "here\n";
+    // if there is black then return false
+    if(m_variables[i]->value() != nullptr && m_variables[i]->value()->token() == BLACK) return false; 
+    i++; 
+  }
+  return true;
+}
+
+
+bool
+NonoGramConstraint::
+update_domain(){
+  // for(auto l : m_constraint)
+    // std::cout << l << " ";
+  // std::cout << "\n";
+  int total_occupancy = std::accumulate(m_constraint.begin(), m_constraint.end(), 0) + m_constraint.size()-1;
+  if(total_occupancy > m_variables.size()) return false;
+  int offset = m_variables.size() - total_occupancy;
+  // std::cout << "with offset : " << offset << "\n";
+  std::vector<int> h(m_variables.size(),WHITE);
+  int k = 0;
+  for(int c: m_constraint){
+    for(int _i = 0; _i < c; _i++){
+      h[k] = BLACK;
+      k++;
+    }
+    // h[k] = WHITE;
+    k++;
+  }
+  // std::cout << "h : {";
+  // for(auto h_val: h){
+     // std::cout << (h_val == BLACK? "BLACK " : "WHITE ");
+  // }
+  // std::cout << "}\n";
+  // std::reverse(h.begin(),h.end());
+  int i = offset;
+  for(int c : m_constraint){
+    if(c < offset){
+      i += c;
+      i++;
+      continue;
+    }
+    for(int j = offset; j < c; j++){
+      Domain* d = m_variables[i]->domain();
+      if(h[i] == BLACK){
+        d->remove_value(new NonoGramValue(WHITE));
+        i++;
+      }
+    }
+
+    i++;
+    i += offset;
+  }
+  // for(auto v: m_variables){
+    // NonoGramVariable* nv = static_cast<NonoGramVariable*>(v);
+    // std::cout << "(" << nv->x() << "," << nv->y() << "){";
+    // for(auto val : v->domain()->values()){
+      // std::cout << (val->token() == BLACK? "BLACK " : "WHITE ");
+    // }
+    // std::cout << "}\n";
+  // }
+
+  return true;
+}
+
+
+
 
 NonoGramColumnConstraint::
 NonoGramColumnConstraint(const std::vector<int>& constraint){
@@ -116,6 +212,7 @@ display(){
   std::cout << "display column constraint\n";
   NonoGramConstraint::display();
 }
+
 
 
 
